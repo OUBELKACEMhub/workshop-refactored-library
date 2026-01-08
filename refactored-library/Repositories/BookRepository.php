@@ -1,25 +1,30 @@
 <?php
 namespace Repositories;
 
-use Core\Database;
-use Entities\Book;
+require_once __DIR__ . '/../Core/Database.php'; 
+require_once __DIR__ . '/../Entities/Book.php';
+require_once __DIR__ . '/../Entities/Author.php';
 use PDO;
+use Core\Database; 
+use Entities\Book;
 
 class BookRepository {
+private $pdo;
 
-
-    public function __construct() {}
+    public function __construct() {
+       $this->pdo = Database::getInstance()->getConnection();
+    }
 
     public function findBooks(): array {
-        $pdo = Database::getConnection();
-    
         $books = [];
-        $sql="SELECT * FROM books";
+        $db = \Core\Database::getInstance(); 
+    $pdo = $db->getConnection();
+        $sql = "SELECT * FROM books";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
-        $rows=$stmt->fetshAll();
+        $rows = $stmt->fetchAll();
         foreach ($rows as $row) {
-            $books[] = new Book($row['title'], $row['author'], $row['price'], $row['stock'], $row['id']);
+            $books[] = new Book($row['title'], $row['author_id'], (float)$row['price'], (int)$row['stock'], (int)$row['id']);
         }
         return $books;
     }
@@ -30,13 +35,13 @@ class BookRepository {
         $row = $stmt->fetch();
         
         if ($row) {
-            return new Book($row['title'], $row['author'], $row['price'], $row['stock'], $row['id']);
+            return new Book($row['title'], $row['author_id'], $row['price'], $row['stock'], $row['id']);
         }
         return null;
     }
 
     public function addBook(Book $book): void {
-        $sql="INSERT INTO books (title, author, price, stock) VALUES (?, ?, ?, ?)";
+        $sql="INSERT INTO books (title, author_id, price, stock) VALUES (?, ?, ?, ?)";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
             $book->getTitle(),
@@ -53,10 +58,7 @@ class BookRepository {
         $stmt->execute([
             ':id'=>$id
         ]);
-    }
-
-
-    
+    }    
 }
 
 $obj=new BookRepository();

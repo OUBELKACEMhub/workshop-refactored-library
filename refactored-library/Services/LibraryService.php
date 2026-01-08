@@ -1,5 +1,6 @@
 <?php
 namespace Services;
+require_once __DIR__ . '/../Repositories/BookRepository.php';
 use Repositories\BookRepository;
 use Entities\Book;
 use Exception;
@@ -17,13 +18,9 @@ class LibraryService {
         echo "no book founded!";
     }
     foreach($allBooks as $book){
-        echo "title:".$book['title'] . "author:". $book['author'];
+        echo "title:".$book->getTitle() . "    author:". $book->getAuthor_id(). "\n";
     }
    }
-
-
-   
-
 
 
 }

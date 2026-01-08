@@ -4,7 +4,7 @@ namespace Entities;
 class Book {
     private int $id;
     private string $title;
-    private string $author;
+    private int $author_id;
     private float $price;
     private int $stock;
 
@@ -22,7 +22,7 @@ class Book {
     public function getTitle(): string { 
         return $this->title;
      }
-    public function getAuthor(): string {
+    public function getAuthor_id(): string {
          return $this->author; 
         }
     public function getPrice(): float {
